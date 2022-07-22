@@ -1,8 +1,11 @@
 function generateOrderNumber(type = "",orderNumbers = []) {
+    if(typeof type !== "string"){
+      return "UNDEFINED_TYPE"
+    }
     // HMS/I/21130001
     let prefix = "";
     switch (type.toLowerCase().trim()) {
-      case "school" || "bootcamp":
+      case "bootcamp":
         prefix = "HMS";
         break;
       case "webinar":
@@ -10,6 +13,7 @@ function generateOrderNumber(type = "",orderNumbers = []) {
         break;
       default:
         return "UNDEFINED_TYPE"
+        // break;
     }
 
     let currentDate   = new Date().getDate();
@@ -27,18 +31,29 @@ function generateOrderNumber(type = "",orderNumbers = []) {
     currentDate = currentDate < 10 ? "0" + currentDate : new Date().getDate();
     let codePrefix = prefix + "/" + codeMonth + "/" + currentYear + "" + currentDate;
 
-    const indexPrefix = orderNumbers.findIndex((item,i)=>{
-      return item.includes(codePrefix)
-    })
+    console.log(codePrefix)
+    let indexPrefix;
+    if(Array.isArray(orderNumbers)){
+      indexPrefix = orderNumbers.findIndex(item=>{
+        return item.slice(0,12) === codePrefix
+      })
+    }else{
+      return "UNDEFINED_TYPE";
+    }
     console.log(indexPrefix)
     let newCode = "";
     if(indexPrefix !== -1){
       let r = 0,data = []; 
       orderNumbers.map(item=>{
-         data.push(+item.slice(-4))
+         if(item.slice(0,3) === "HMS"){
+            data.push(+item.slice(-4))
+         }
+         if(item.slice(0,3) === "HSL"){
+            data.push(+item.slice(-4))
+         }
+         
       })
       r =  Math.max(...data)
-      console.log(r)
       let increment = r + 1;
       increment =
         increment.toString().length === 1
@@ -54,7 +69,5 @@ function generateOrderNumber(type = "",orderNumbers = []) {
     }
     return newCode;
   }
-
-  // HMS/VI/21250055 ==> kode atau prefix, VI => bulan dibuat, 21=>tahun buat, 25 => tanngal buat, 0055=>no urut.
-  const code = generateOrderNumber("school",["HMS/VII/22220001","HMS/VII/22220002","HMS/VII/22220003"])
+  const code = generateOrderNumber("bootcamp",["HSR/VII/22220001","HSR/VII/22220002"])
   console.log(code)
