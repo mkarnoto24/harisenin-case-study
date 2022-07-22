@@ -2,7 +2,7 @@ function generateOrderNumber(type = "",orderNumbers = []) {
     // HMS/I/21130001
     let prefix = "";
     switch (type.toLowerCase().trim()) {
-      case "school":
+      case "school" || "bootcamp":
         prefix = "HMS";
         break;
       case "webinar":
